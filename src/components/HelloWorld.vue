@@ -2,6 +2,7 @@
     <div>
         <button v-on:click="submits()"></button>
         <button>1111</button>
+        <button>2222</button>
     </div>
 </template>
 
