@@ -1,6 +1,12 @@
+import axios from 'axios'
+
 export default function (url,obj) {
     return new Promise(function (resolve, reject) {
-        console.log(11);
-        resolve("string");
+        axios.post(url,obj)
+            .then((rel)=>{
+                resolve(rel,data)
+            },()=>{
+
+            })
     })
 }
