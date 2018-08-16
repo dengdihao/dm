@@ -78,13 +78,63 @@
             login() {
                 if (this.username == "" || this.password == "") {
                     alert("请输入用户名活着密码")
-                }else {
-                    let data={
-                        'username':this.username,
-                        'password':this.password
+                } else {
+                    let data = {
+                        'username': this.username,
+                        'password': this.password
                     }
                     /*接口请求*/
-                    this.$http.post()
+                    this.$http.post('', data)
+                        .then((res) => {
+                            console.log(res);
+                            /*接口传值是(-1,该用户不存在)(0,密码错误),同时还会检测管理员账号的值*/
+                            if (res.data == -1) {
+                                this.tishi = '该用户不存在';
+                                this.showTishi = true;
+                            } else if (res.data == 0) {
+                                this.tishi = "密码输入有误";
+                                this.showTishi = true;
+                            } else if (res == 'admin') {
+                                this.$route.push('/main');
+                            } else {
+                                this.tishi = '登录成功';
+                                this.showTishi = true;
+                                setCookie('username', this.username, 1000 * 6);
+                                setTimeout(function () {
+                                    this.$route.push('/home');
+                                }.bind(this), 1000)
+                            }
+                        })
+                }
+            },
+            ToRegister() {
+                this.showRegister = true
+                this.showLogin = false
+            },
+            ToLogin() {
+                this.showRegister = false
+                this.showLogin = true
+            },
+            register() {
+                if (this.newUsername == "" || this.newPassword == "") {
+                    alert("请输入用户名或密码")
+                } else {
+                    let data = {'username': this.newUsername, 'password': this.newPassword}
+                    this.$http.post('http://localhost/vueapi/index.php/Home/user/register', data).then((res) => {
+                        console.log(res)
+                        if (res.data == "ok") {
+                            this.tishi = "注册成功"
+                            this.showTishi = true
+                            this.username = ''
+                            this.password = ''
+                            /*注册成功之后再跳回登录页*/
+                            setTimeout(function () {
+                                this.showRegister = false
+                                this.showLogin = true
+                                this.showTishi = false
+                            }.bind(this), 1000)
+                        }
+                    })
                 }
             }
         },
